@@ -182,10 +182,13 @@
     transform: translateY(-100%);
   }
   
+  /* Modified: Control width during transition */
   .headline-slide-leave-active {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
+    /* Remove right: 0; to prevent full width stretch */
+    width: fit-content; /* Ensure it maintains its content width */
+    max-width: calc(100% - 10px); /* Keep the max-width constraint */
   }
   </style>
