@@ -3,6 +3,8 @@ import vue from '@astrojs/vue';
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  integrations: [vue()],
-  vite: {    plugins: [tailwindcss()],  },
+    site: 'https://mattcotter.github.io',
+    base: '/left-feed',
+    integrations: [vue()],
+    vite: {    plugins: [tailwindcss()],  },
 });
