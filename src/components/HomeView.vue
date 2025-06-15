@@ -35,20 +35,25 @@
           <h2 class="text-lg font-bold mb-4">
             {{ isToday(day.date) ? 'Today' : day.date }}
           </h2>
+  
           <ul v-if="day.links.length" class="space-y-2 max-w-75">
-            <li v-for="(link, i) in day.links" :key="link.url" :class="i == 0 ? `pt-5 pb-5` : `pt-5 pb-5 border-t-2 border-black`">
+            <li v-for="(link, i) in day.links" :key="link.url" :class="i == 0 ? 'pt-5 pb-5' : 'pt-5 pb-5 border-t-2 border-black'">
+              <div v-if="link.tags.length" class="flex flex-wrap gap-1 mb-1">
                 <a
-                    v-if="link.tag"
-                    :href="`/tags/${link.tag}`"
-                    :class="`pl-2 pr-2 text-xs font-semibold text-blue-800 rounded-full block w-fit mb-1 tag-${link.tag.toLowerCase()} bg-blue-100`"
-                    >
-                    #{{ link.tag }}
-                    </a>
-                    <a :href="link.url" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline block">
-                    {{ link.title }}
-                    </a>
+                  v-for="tag in link.tags"
+                  :key="tag"
+                  :href="`/tags/${tag}`"
+                  :class="`pl-2 pr-2 text-xs font-semibold text-blue-800 rounded-full block w-fit tag-${tag.toLowerCase()} bg-blue-100`"
+                >
+                  #{{ tag }}
+                </a>
+              </div>
+              <a :href="link.url" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline block">
+                {{ link.title }}
+              </a>
             </li>
           </ul>
+  
           <p v-else class="text-gray-500">No links for this day.</p>
         </section>
       </main>
@@ -65,9 +70,10 @@
   
   const isToday = (dateString) => {
     const today = new Date();
-    const todayFormatted = today.getFullYear() + '-'
-                          + String(today.getMonth() + 1).padStart(2, '0') + '-'
-                          + String(today.getDate()).padStart(2, '0');
+    const todayFormatted =
+      today.getFullYear() + '-' +
+      String(today.getMonth() + 1).padStart(2, '0') + '-' +
+      String(today.getDate()).padStart(2, '0');
     return dateString === todayFormatted;
   };
   
@@ -83,12 +89,14 @@
         'january', 'february', 'march', 'april', 'may', 'june',
         'july', 'august', 'september', 'october', 'november', 'december'
       ].indexOf(monthName.toLowerCase());
+  
       if (monthIndex === -1) return null;
   
       const date = new Date(year, monthIndex, parseInt(day));
-      const formattedDate = date.getFullYear() + '-'
-                          + String(date.getMonth() + 1).padStart(2, '0') + '-'
-                          + String(date.getDate()).padStart(2, '0');
+      const formattedDate =
+        date.getFullYear() + '-' +
+        String(date.getMonth() + 1).padStart(2, '0') + '-' +
+        String(date.getDate()).padStart(2, '0');
   
       const raw = mod.rawContent();
       let currentDayLinks = [];
@@ -97,15 +105,14 @@
       if (typeof raw === 'string') {
         raw.trim().split('\n').forEach((line) => {
           const m = line.match(/\[(.+?)\]\((.+?)\)(?:\s*\((.+?)\))?/);
-  
           if (m) {
             const link = {
               title: m[1],
               url: m[2],
-              tag: m[3] ? m[3].trim() : null
+              tags: m[3] ? m[3].split(',').map(tag => tag.trim()) : []
             };
   
-            if (link.tag && link.tag.toLowerCase() === 'headline') {
+            if (link.tags.includes('Headline')) {
               if (isToday(formattedDate)) {
                 dayHeadlines.push(link);
               } else {
@@ -131,7 +138,8 @@
   
     if (todayHeadlines.value.length > 1) {
       headlineInterval = setInterval(() => {
-        currentHeadlineIndex.value = (currentHeadlineIndex.value + 1) % todayHeadlines.value.length;
+        currentHeadlineIndex.value =
+          (currentHeadlineIndex.value + 1) % todayHeadlines.value.length;
       }, 4000);
     }
   });
@@ -145,8 +153,8 @@
   
   <style scoped>
   :root {
-    --header-height: 4rem; 
-    --headline-taper-height: 3rem; /* Approx. 48px, based on py-2, px-3. Adjust as needed */
+    --header-height: 4rem;
+    --headline-taper-height: 3rem;
     --total-fixed-height: calc(var(--header-height) + var(--headline-taper-height));
   }
   
@@ -161,18 +169,17 @@
   }
   
   .scrollbar-hide::-webkit-scrollbar {
-      display: none;
+    display: none;
   }
   .scrollbar-hide {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   
   .headline-slide-enter-active,
   .headline-slide-leave-active {
     transition: all 0.5s ease-in-out;
   }
-  
   .headline-slide-enter-from {
     opacity: 0;
     transform: translateY(100%);
@@ -181,14 +188,12 @@
     opacity: 0;
     transform: translateY(-100%);
   }
-  
-  /* Modified: Control width during transition */
   .headline-slide-leave-active {
     position: absolute;
     top: 0;
     left: 0;
-    /* Remove right: 0; to prevent full width stretch */
-    width: fit-content; /* Ensure it maintains its content width */
-    max-width: calc(100% - 10px); /* Keep the max-width constraint */
+    width: fit-content;
+    max-width: calc(100% - 10px);
   }
   </style>
+  
