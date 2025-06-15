@@ -74,3 +74,33 @@
     font-family: 'Fira Code', 'Segoe UI', monospace;
     font-weight: bolder;
   }
+
+  .tag-ai {
+    @apply bg-blue-300;
+    @apply text-black;
+  }
+
+  .tag-environment {
+    @apply bg-green-300;
+    @apply text-black;
+  }
+
+  .tag-politics {
+    @apply bg-gradient-to-r from-red-500 via-white to-blue-500;
+    @apply text-black;
+  }
+
+  .tag-healthcare {
+    @apply bg-black;
+    @apply text-white;
+  }
+
+  .tag-social {
+    @apply bg-amber-100;
+    @apply text-black;
+  }
+
+  .tag-headline {
+    @apply bg-red-300;
+    @apply text-black;
+  }

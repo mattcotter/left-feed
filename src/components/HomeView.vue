@@ -3,7 +3,7 @@
       <div class="fixed-top-bar">
         <header class="p-4 border-b border-gray-300 flex justify-between items-center">
           <h1 class="text-2xl font-bold">Left Feed</h1>
-          <a href="/archive" class="bg-black text-white rounded-full p-4 hover:underline">View Archive →</a>
+          <a href="/left-feed/archive" class="bg-black text-white rounded-full p-4 hover:underline">View Archive →</a>
         </header>
   
         <section v-if="todayHeadlines.length" class="bg-gradient-to-r from-gray-50 to-white py-2 px-4 border-b border-gray-200 flex items-center relative overflow-hidden h-12">
@@ -37,16 +37,16 @@
           </h2>
           <ul v-if="day.links.length" class="space-y-2 max-w-75">
             <li v-for="(link, i) in day.links" :key="link.url" :class="i == 0 ? `pt-5 pb-5` : `pt-5 pb-5 border-t-2 border-black`">
-              <a :href="link.url" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">
-                {{ link.title }}
-              </a>
-              <a
-                v-if="link.tag"
-                :href="`/tags/${link.tag}`"
-                class="ml-2 pr-2 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full whitespace-nowrap"
-              >
-                #{{ link.tag }}
-              </a>
+                <a
+                    v-if="link.tag"
+                    :href="`/tags/${link.tag}`"
+                    :class="`pl-2 pr-2 text-xs font-semibold text-blue-800 rounded-full block w-fit mb-1 tag-${link.tag.toLowerCase()} bg-blue-100`"
+                    >
+                    #{{ link.tag }}
+                    </a>
+                    <a :href="link.url" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline block">
+                    {{ link.title }}
+                    </a>
             </li>
           </ul>
           <p v-else class="text-gray-500">No links for this day.</p>
@@ -145,7 +145,7 @@
   
   <style scoped>
   :root {
-    --header-height: 4rem; /* Based on your p-4 header with content */
+    --header-height: 4rem; 
     --headline-taper-height: 3rem; /* Approx. 48px, based on py-2, px-3. Adjust as needed */
     --total-fixed-height: calc(var(--header-height) + var(--headline-taper-height));
   }
