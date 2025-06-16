@@ -1,13 +1,102 @@
 ---
-import ArchiveView from '../components/ArchiveView.vue';
+import "../styles/global.css";
+import type { MarkdownInstance } from "astro";
+
+interface PostFrontmatter {
+  title: string;
+  pubDate: string;
+  description: string;
+}
+
+type MarkdownPost = MarkdownInstance<PostFrontmatter>;
+
+const allPosts: MarkdownPost[] = await Astro.glob("/src/content/**/*.md");
+
+const validPosts = allPosts
+  .filter((post) => post.frontmatter)
+  .sort(
+    (a, b) =>
+      new Date(b.frontmatter.pubDate).getTime() -
+      new Date(a.frontmatter.pubDate).getTime()
+  );
+
+function getArchiveUrl(post: MarkdownPost) {
+  const date = new Date(post.frontmatter.pubDate);
+  const year = date.getFullYear();
+  const month = date.toLocaleString("default", { month: "long" }).toLowerCase();
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${Astro}/archive/${year}/${month}/${day}`;
+}
 ---
 
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <title>Link Archive</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Archive</title>
+    <meta name="description" content="All blog posts" />
   </head>
   <body>
-    <ArchiveView client:load />
+    <main>
+      <h1>Blog Archive</h1>
+      <section>
+        {
+          validPosts.length === 0 ? (
+            <p>No posts found yet.</p>
+          ) : (
+            validPosts.map((post) => (
+              <div class="post-summary">
+                <h2>
+                  <a href={getArchiveUrl(post)}>{post.frontmatter.title}</a>
+                </h2>
+                <p>
+                  Published:{" "}
+                  {new Date(post.frontmatter.pubDate).toLocaleDateString(
+                    "en-US",
+                    {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }
+                  )}
+                </p>
+                <p>{post.frontmatter.description}</p>
+              </div>
+            ))
+          )
+        }
+      </section>
+    </main>
   </body>
 </html>
+
+<style is:global>
+  main {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+  .post-summary {
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  .post-summary:last-child {
+    border-bottom: none;
+  }
+  .post-summary h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+  .post-summary h2 a {
+    text-decoration: none;
+    color: inherit;
+  }
+  .post-summary h2 a:hover {
+    text-decoration: underline;
+  }
+  .post-summary p {
+    font-size: 0.9em;
+    color: #555;
+  }
+</style>
