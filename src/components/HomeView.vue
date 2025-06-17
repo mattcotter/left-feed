@@ -1,41 +1,11 @@
 <template>
   <div class="bg-white text-black">
     <div class="fixed-top-bar">
-      <header
-        class="p-4 border-b border-gray-300 flex justify-between items-center"
-      >
-        <h1 class="text-2xl font-bold">Left Feed</h1>
-        <a
-          href="/left-feed/archive"
-          class="bg-black text-white rounded-full p-4 hover:underline"
-          >View Archive →</a
-        >
-      </header>
-
-      <section
-        v-if="todayHeadlines.length"
-        class="bg-gradient-to-r from-gray-50 to-white py-2 px-4 border-b border-gray-200 flex items-center relative overflow-hidden h-12"
-      >
-        <span class="text-xs font-bold text-gray-700 mr-3 flex-shrink-0"
-          >TODAY'S HEADLINES:</span
-        >
-        <div class="relative flex-grow h-full">
-          <Transition name="headline-slide" mode="out-in">
-            <a
-              v-if="todayHeadlines[currentHeadlineIndex]"
-              :key="todayHeadlines[currentHeadlineIndex].url"
-              :href="todayHeadlines[currentHeadlineIndex].url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 hover:bg-red-200 transition-colors absolute inset-y-0 left-0"
-              style="max-width: calc(100% - 10px)"
-            >
-              <span class="mr-1">🔥</span>
-              {{ todayHeadlines[currentHeadlineIndex].title }}
-            </a>
-          </Transition>
-        </div>
-      </section>
+      <HeaderView />
+      <TodaysHeadlines
+        :headlines="todayHeadlines"
+        :current-index="currentHeadlineIndex"
+      />
     </div>
 
     <main class="pt-35 flex flex-row overflow-x-auto">
@@ -82,6 +52,8 @@
 </template>
 
 <script setup>
+import HeaderView from './HeaderView.vue';
+import TodaysHeadlines from './TodaysHeadlines.vue'; // Import the new component
 import { ref, onMounted, onUnmounted } from "vue";
 
 const recentDays = ref([]);
@@ -216,25 +188,5 @@ onUnmounted(() => {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-.headline-slide-enter-active,
-.headline-slide-leave-active {
-  transition: all 0.5s ease-in-out;
-}
-.headline-slide-enter-from {
-  opacity: 0;
-  transform: translateY(100%);
-}
-.headline-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-100%);
-}
-.headline-slide-leave-active {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: fit-content;
-  max-width: calc(100% - 10px);
 }
 </style>

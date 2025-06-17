@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import HeaderView from '../components/HeaderView.vue';
+import DefaultLayout from "../layout/DefaultLayout.astro";
 import type { MarkdownInstance } from "astro";
 
 interface PostFrontmatter {
@@ -29,16 +31,12 @@ function getArchiveUrl(post: MarkdownPost) {
 }
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Archive</title>
-    <meta name="description" content="All blog posts" />
-  </head>
-  <body>
+<DefaultLayout>
+    <div class="fixed-top-bar">
+        <HeaderView />
+    </div>
     <main>
-      <h1>Blog Archive</h1>
+      <h1>Archive</h1>
       <section>
         {
           validPosts.length === 0 ? (
@@ -67,8 +65,7 @@ function getArchiveUrl(post: MarkdownPost) {
         }
       </section>
     </main>
-  </body>
-</html>
+</DefaultLayout>
 
 <style is:global>
   main {

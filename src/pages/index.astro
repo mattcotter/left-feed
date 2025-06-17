@@ -1,14 +1,9 @@
 ---
+import DefaultLayout from '../layout/DefaultLayout.astro'
 import HomeView from '../components/HomeView.vue';
 import "../styles/global.css";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Left feed</title>
-  </head>
-  <body>
+<DefaultLayout>
     <HomeView client:load />
-  </body>
-</html>
+</DefaultLayout>
