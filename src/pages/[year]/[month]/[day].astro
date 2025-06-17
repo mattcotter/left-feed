@@ -1,0 +1,50 @@
+---
+// src/pages/[year]/[month]/[day].astro
+
+export async function getStaticPaths() {
+  const paths = [];
+
+  // Define your date range
+  const startYear = 2023;
+  const endYear = 2025; // Or whatever future year you want to support
+
+  for (let year = startYear; year <= endYear; year++) {
+    for (let month = 1; month <= 12; month++) {
+      // Calculate days in month (handling leap years for February)
+      const daysInMonth = new Date(year, month, 0).getDate(); // last day of the month
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        paths.push({
+          params: {
+            year: String(year),
+            // Pad month and day with leading zeros if they are single digits
+            month: String(month).padStart(2, '0'),
+            day: String(day).padStart(2, '0'),
+          },
+        });
+      }
+    }
+  }
+
+  return paths;
+}
+
+// Destructure the dynamic parameters from Astro.params
+const { year, month, day } = Astro.params;
+
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content for {month}/{day}/{year}</title>
+</head>
+<body>
+    <h1>Content for {month}/{day}/{year}</h1>
+
+    <p>This page dynamically displays content for the date: {month}/{day}/{year}.</p>
+
+    </body>
+</html>

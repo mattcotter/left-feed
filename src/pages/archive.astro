@@ -4,6 +4,8 @@ import HeaderView from '../components/HeaderView.vue';
 import DefaultLayout from "../layout/DefaultLayout.astro";
 import type { MarkdownInstance } from "astro";
 
+const base = import.meta.env.BASE_URL;
+
 interface PostFrontmatter {
   title: string;
   pubDate: string;
@@ -12,23 +14,25 @@ interface PostFrontmatter {
 
 type MarkdownPost = MarkdownInstance<PostFrontmatter>;
 
-const allPosts: MarkdownPost[] = await Astro.glob("/src/content/**/*.md");
+const allPosts: MarkdownPost[] = await Astro.glob("/src/pages/posts/**/*.md");
 
 const validPosts = allPosts
-  .filter((post) => post.frontmatter)
-  .sort(
-    (a, b) =>
-      new Date(b.frontmatter.pubDate).getTime() -
-      new Date(a.frontmatter.pubDate).getTime()
-  );
+  .filter((post) => post.frontmatter?.pubDate)
+  .sort((a, b) =>
+    new Date(b.frontmatter.pubDate).getTime() -
+    new Date(a.frontmatter.pubDate).getTime()
+)
+
 
 function getArchiveUrl(post: MarkdownPost) {
   const date = new Date(post.frontmatter.pubDate);
   const year = date.getFullYear();
   const month = date.toLocaleString("default", { month: "long" }).toLowerCase();
   const day = String(date.getDate()).padStart(2, "0");
-  return `${Astro}/archive/${year}/${month}/${day}`;
+  return `${base}posts/${year}/${month}/${day}`;
 }
+---
+
 ---
 
 <DefaultLayout>

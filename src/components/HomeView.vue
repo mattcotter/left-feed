@@ -29,7 +29,7 @@
                 v-for="tag in link.tags"
                 :key="tag"
                 :href="`/tags/${tag}`"
-                :class="`pl-2 pr-2 text-xs font-semibold text-blue-800 rounded-full block w-fit tag-${tag.toLowerCase()} bg-blue-100`"
+                :class="`pl-2 pr-2 text-xs font-semibold text-blue-800 rounded-full block w-fit tag tag-${tag.toLowerCase()} bg-blue-100`"
               >
                 #{{ tag }}
               </a>
@@ -73,11 +73,11 @@ const isToday = (dateString) => {
 };
 
 onMounted(async () => {
-  const modules = import.meta.glob("/src/content/**/*.md", { eager: true });
+  const modules = import.meta.glob("/src/pages/posts/**/*.md", { eager: true });
 
   const posts = Object.entries(modules)
     .map(([path, mod]) => {
-      const match = path.match(/\/content\/(\d{4})\/([a-z]+)\/(\d{1,2})\.md$/i);
+      const match = path.match(/\/posts\/(\d{4})\/([a-z]+)\/(\d{1,2})\.md$/i);
       if (!match) return null;
 
       const [_, year, monthName, day] = match;

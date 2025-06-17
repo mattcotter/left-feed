@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 
 // Step 1: Load the Markdown files as async functions
-const postImports = import.meta.glob('../content/**/*.md');
+const postImports = import.meta.glob('/src/pages/posts/**/*.md');
 
 export async function GET(context) {
   // Step 2: Resolve all Markdown files
@@ -17,7 +17,7 @@ export async function GET(context) {
       title: post.frontmatter.title,
       pubDate: post.frontmatter.pubDate,
       description: post.frontmatter.description,
-      link: `/posts/${post.frontmatter.slug || post.url}`, // adjust as needed
+      link: `${post.frontmatter.slug || post.url}`, // adjust as needed
     }));
 
   return rss({
